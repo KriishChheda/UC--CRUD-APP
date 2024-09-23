@@ -108,17 +108,63 @@ document.getElementById("deleteRequest").addEventListener("click",deleteRequest)
  })
 }
 
+// UPDATE REQUEST
+document.getElementById("updateRequest").addEventListener("click",updateRequest);
 
+function updateRequest(){
+let updateId=prompt("Which id do you want to update?");
 
+let updateTitle=prompt("Please fill the input box with the new title.");
 
+fetch(`https://dummyjson.com/posts/${updateId}`, {
+  method: 'PUT', /* or PATCH */
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    title: updateTitle,
+  })
+})
+.then(res => res.json())
+.then((updatedData)=>{
+  console.log(updatedData); // updatedData contains the updated object
 
+  fetch('https://dummyjson.com/posts')
+  .then(res => res.json()) 
+  .then((data)=>{
+  let x = data.posts;  // here x contins the array of 30 objects.
+  
+  storageDiv.innerHTML="";
+  
+  // each object will go to the user object one by one 
+  x.forEach((user)=>{
 
+    let newUpdatedPost;
+  if(user.id==updatedData.id){
 
+    newUpdatedPost =`
+  
+    <ul class="list-group mb-3">
+    <li class="list-group-item">ID: ${updatedData.id}</li>
+    <li class="list-group-item">Title: ${updatedData.title}</li>
+    </ul>
+    `
+    storageDiv.innerHTML += newUpdatedPost;
+    }
 
-
-
-
-
+    else{
+      newUpdatedPost =`
+  
+      <ul class="list-group mb-3">
+      <li class="list-group-item">ID: ${user.id}</li>
+      <li class="list-group-item">Title: ${user.title}</li>
+      </ul>
+      `
+      storageDiv.innerHTML += newUpdatedPost;
+    
+    }
+   })
+  })
+});
+}
 
 
 
